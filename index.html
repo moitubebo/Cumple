@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gossip Girl - Vidas y Secretos</title>
+    <!-- Incluye Tailwind CSS para un diseño moderno y responsive -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Conecta a Google Fonts para los estilos de tipografía Playfair Display e Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Estilos base del cuerpo de la página */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #000000; /* Fondo negro intenso */
+            color: #d1d5db; /* Color de texto claro para contraste */
+        }
+        /* Aplica la fuente Playfair Display a los títulos */
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+        }
+        /* Estilos para las tarjetas de personajes */
+        .character-card {
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            background-color: #111111; /* Fondo oscuro para las tarjetas */
+        }
+        /* Efecto de elevación al pasar el mouse sobre las tarjetas */
+        .character-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 215, 0, 0.2); /* Sombra dorada */
+        }
+        /* Estilos del modal, inicialmente oculto y transparente */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        /* Clase para mostrar el modal con una transición suave */
+        .modal.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        /* Estilos del contenido del modal */
+        .modal-content {
+            background-color: #111111; /* Fondo oscuro para el modal */
+            padding: 2rem;
+            border-radius: 1rem;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            transform: scale(0.95);
+            transition: transform 0.3s ease-in-out;
+        }
+        /* Clase para animar el contenido del modal cuando se muestra */
+        .modal.show .modal-content {
+            transform: scale(1);
+        }
+        /* Estilos para la invitación */
+        .gossip-girl-text {
+            font-family: 'Playfair Display', serif;
+        }
+        .gold-glow {
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.7), 0 0 15px rgba(255, 215, 0, 0.4);
+        }
+    </style>
+</head>
+<body class="p-6">
+    <div class="max-w-6xl mx-auto bg-[#0a0a0a] rounded-xl shadow-lg p-8">
+        <h1 class="text-6xl font-bold text-center text-amber-400 mb-4 drop-shadow-[0_0_10px_rgba(255,215,0,0.5)]">XoXo, Gossip Girl</h1>
+        
+        <p class="text-gray-400 text-lg text-center mb-8 italic">
+            "¿Quién soy? Es el único secreto que nunca te diré. Ya sabes que me quieres... XoXo, Gossip Girl."
+        </p>
+
+        <p class="text-gray-400 text-lg text-center mb-8">
+            Dicen que el Upper East Side es un lugar de ensueño, pero detrás de cada fachada de lujo se esconde un secreto. Los jóvenes de la élite de Manhattan navegan entre dramas, traiciones y amores prohibidos, todo bajo la atenta mirada de una bloguera anónima que lo sabe todo. Pero ahora hay un nuevo jugador en la ciudad, una reina que no nació en este mundo. Viene de un país lejano, de la vibrante Colombia, y su llegada ha provocado una ola de rumores. ¿Es la verdadera sucesora? ¿O solo una intrusa más que se unirá a la larga lista de los caídos? Algunos buscan la fama, otros el amor, pero al final, todos tienen un vacío que solo la fama o el amor pueden llenar, y ella es la candidata perfecta para llenarlo.
+        </p>
+
+        <div class="flex justify-center mb-8">
+            <!-- Imagen de Gossip Girl para el encabezado. Ahora es un logo más estilizado y horizontal. -->
+            <img src="logo.png" alt="Logo horizontal estilizado de Gossip Girl" class="w-96 h-auto mx-auto shadow-lg rounded-md">
+        </div>
+
+        <!-- Grid de personajes -->
+        <div id="character-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Tarjeta de Serena van der Woodsen -->
+            <div class="rounded-lg shadow-md p-4 flex flex-col items-center text-center character-card" onclick="showCharacterDetails('Serena van der Woodsen')">
+                <h2 class="text-xl font-bold text-amber-400">Serena van der Woodsen</h2>
+                <p class="text-gray-300 mt-2">La "It Girl"</p>
+                <!-- Imagen de Serena van der Woodsen -->
+                <img src="ser.png" alt="Serena van der Woodsen" class="w-32 h-32 rounded-full mt-4 border-4 border-amber-400 object-cover">
+                <p class="text-sm text-gray-400 mt-2">Busca amor genuino y ser "normal", pero siempre escapa.</p>
+            </div>
+
+            <!-- Tarjeta de Blair Waldorf -->
+            <div class="rounded-lg shadow-md p-4 flex flex-col items-center text-center character-card" onclick="showCharacterDetails('Blair Waldorf')">
+                <h2 class="text-xl font-bold text-amber-400">Blair Waldorf</h2>
+                <p class="text-gray-300 mt-2">La Reina B</p>
+                <!-- Imagen de Blair Waldorf -->
+                <img src="blair.png" alt="Blair Waldorf" class="w-32 h-32 rounded-full mt-4 border-4 border-amber-400 object-cover">
+                <p class="text-sm text-gray-400 mt-2">Lucha por la perfección y el control, teme no ser suficiente.</p>
+            </div>
+
+            <!-- Tarjeta de Chuck Bass -->
+            <div class="rounded-lg shadow-md p-4 flex flex-col items-center text-center character-card" onclick="showCharacterDetails('Chuck Bass')">
+                <h2 class="text-xl font-bold text-amber-400">Chuck Bass</h2>
+                <p class="text-gray-300 mt-2">El Heredero Oscuro</p>
+                <!-- Imagen de Chuck Bass -->
+                <img src="chuck.png" alt="Chuck Bass" class="w-32 h-32 rounded-full mt-4 border-4 border-amber-400 object-cover">
+                <p class="text-sm text-gray-400 mt-2">Busca aceptación y amor, pero se esconde detrás de la crueldad.</p>
+            </div>
+
+            <!-- Tarjeta de Dan Humphrey -->
+            <div class="rounded-lg shadow-md p-4 flex flex-col items-center text-center character-card" onclick="showCharacterDetails('Dan Humphrey')">
+                <h2 class="text-xl font-bold text-amber-400">Dan Humphrey</h2>
+                <p class="text-gray-300 mt-2">El "Lonely Boy"</p>
+                <!-- Imagen de Dan Humphrey -->
+                <img src="dan.png" alt="Dan Humphrey" class="w-32 h-32 rounded-full mt-4 border-4 border-amber-400 object-cover">
+                <p class="text-sm text-gray-400 mt-2">Anhela pertenecer al mundo que critica, y lo logra de la forma más cruel.</p>
+            </div>
+
+            <!-- Tarjeta de Nate Archibald -->
+            <div class="rounded-lg shadow-md p-4 flex flex-col items-center text-center character-card" onclick="showCharacterDetails('Nate Archibald')">
+                <h2 class="text-xl font-bold text-amber-400">Nate Archibald</h2>
+                <p class="text-gray-300 mt-2">El "Chico de Oro"</p>
+                <!-- Imagen de Nate Archibald -->
+                <img src="nate.png" alt="Nate Archibald" class="w-32 h-32 rounded-full mt-4 border-4 border-amber-400 object-cover">
+                <p class="text-sm text-gray-400 mt-2">Vive a la sombra de los demás, buscando su propia identidad.</p>
+            </div>
+            
+            <!-- Tarjeta especial para DARQUEEN -->
+            <div class="rounded-lg shadow-md p-4 flex flex-col items-center text-center character-card" onclick="showCharacterDetails('DARQUEEN')">
+                <h2 class="text-xl font-bold text-amber-400">DARQUEEN</h2>
+                <p class="text-gray-300 mt-2">¿La nueva Reina?</p>
+                <!-- Imagen genérica de Gossip Girl para DARQUEEN -->
+                <img src="dar.png" alt="DARQUEEN" class="w-32 h-32 rounded-full mt-4 border-4 border-amber-400 object-cover">
+                <p class="text-sm text-gray-400 mt-2">Un misterio total, ¿será la próxima en caer?</p>
+            </div>
+        </div>
+
+        <!-- Contenedor del modal, oculto por defecto -->
+        <div id="characterModal" class="modal">
+            <div id="modalContent" class="modal-content relative">
+                <!-- Botón para cerrar el modal -->
+                <button onclick="hideCharacterDetails()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-200 text-2xl font-bold">×</button>
+                <div id="modalBody" class="text-gray-300">
+                    <!-- El contenido del personaje se carga aquí dinámicamente con JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Objeto que almacena toda la información de los personajes
+        const characters = {
+            'Serena van der Woodsen': {
+                role: 'La "It Girl"',
+                description: 'Serena es la chica dorada de la serie, el centro de atención. Pero su vida está llena de secretos, huidas y un constante deseo de dejar atrás su pasado problemático.',
+                story: 'Serena regresa a Nueva York después de un año de ausencia, desatando el caos. Su vida gira en torno a fiestas, relaciones fallidas y un constante deseo de ser vista como algo más que un símbolo. Su viaje está marcado por la búsqueda de la redención y un amor que la haga sentir "normal".',
+                emptyFeeling: 'La búsqueda de un propósito. A pesar de tenerlo todo, se siente perdida, un fantasma que flota entre el lujo y la miseria, anhelando una vida simple que parece inalcanzable.',
+                image: 'https://placehold.co/192x192/444/FFF?text=Serena',
+                chat: [
+                    { name: 'Chica Indiscreta', message: 'Serena, ¿qué planes hay para el cumpleaños de DARQUEEN? He oído que no hay invitaciones.' },
+                    { name: 'Serena van der Woodsen', message: 'No lo sé, estoy tan perdida como tú. Tal vez es un evento secreto, un poco de misterio no le hace daño a nadie, ¿verdad?' },
+                    { name: 'Nate Archibald', message: 'No me parece tan misterioso. Simplemente no quieren que vayamos.' },
+                    { name: 'Serena van der Woodsen', message: 'No seas tan negativo, Nate. Podría ser una sorpresa, ¡es emocionante!' },
+                ]
+            },
+            'Blair Waldorf': {
+                role: 'La Reina B',
+                description: 'Inteligente, ambiciosa y manipuladora. Blair es la Reina de Constance Billard, la rival de Serena, pero debajo de su corona se esconde una inseguridad profunda.',
+                story: 'Blair es una estratega maestra. Desde planear fiestas hasta destruir a sus rivales, todo en su vida es una batalla por el control. Su relación con Chuck es la prueba de su mayor debilidad: el amor que no puede controlar.',
+                emptyFeeling: 'Su miedo a no ser suficiente. Por eso necesita ser la mejor, la más popular, la más exitosa. Cree que el control y el poder la protegerán de la decepción, pero solo la alejan de la felicidad genuina.',
+                image: 'https://placehold.co/192x192/444/FFF?text=Blair',
+                chat: [
+                    { name: 'Blair Waldorf', message: 'Chuck, ¿has oído algo de la nueva chica? ¿Qué hará en su cumpleaños?' },
+                    { name: 'Chuck Bass', message: 'La nueva chica, ¿te refieres a la que no tiene invitaciones? Probablemente nada digno de nuestro tiempo.' },
+                    { name: 'Blair Waldorf', message: '¿Cómo que nada? Podría estar planeando algo grande. Los secretos son para los débiles, y si no se ha anunciado nada, debe ser un intento de opacarme.' },
+                    { name: 'Chuck Bass', message: 'O tal vez, Blair, no todo se trata de ti. Aunque me gustaría que así fuera.' },
+                ]
+            },
+            'Chuck Bass': {
+                role: 'El Heredero Oscuro',
+                description: 'Chuck es el chico malo por excelencia, un playboy multimillonario. Su arrogancia es una fachada que esconde un alma atormentada, en busca de amor y redención.',
+                story: 'Chuck pasa de ser un villano egoísta a un hombre que lucha por el amor de su vida, Blair. Su viaje es de crecimiento personal, enfrentándose a los fantasmas de su pasado, especialmente la relación con su padre.',
+                emptyFeeling: 'La soledad. A pesar de tener toda la riqueza y el poder del mundo, se siente solo. Su alma está rota por el desamor de su padre y la falta de una conexión real, lo que lo lleva a buscar el amor de Blair para llenar ese vacío.',
+                image: 'https://placehold.co/192x192/444/FFF?text=Chuck',
+                chat: [
+                    { name: 'Chuck Bass', message: 'Blair, ¿has visto lo que se dice sobre el cumpleaños de DARQUEEN?' },
+                    { name: 'Blair Waldorf', message: 'Se rumorea que será una fiesta pública. Una fiesta que todos podrán ver.' },
+                    { name: 'Chuck Bass', message: '¿Una fiesta pública? Qué decepción. Los verdaderos negocios se hacen en privado.' },
+                    { name: 'Blair Waldorf', message: 'Quizás no tiene nada que esconder. O, por el contrario, es tan obvia que lo hace público para desviar la atención.' },
+                ]
+            },
+            'Dan Humphrey': {
+                role: 'El "Lonely Boy"',
+                description: 'Un chico de Brooklyn que se infiltra en el mundo de la élite de Manhattan. El "chico solitario" se convierte en el mayor de los infiltrados y un traidor para los demás.',
+                story: 'Dan es el outsider que observa a la élite desde las sombras. Su deseo de pertenecer lo lleva a enamorarse de Serena y a unirse al mundo que critica. Al final, se revela que él es "Gossip Girl", lo que lo convierte en el gran villano de la serie, destruyendo a todos por pura envidia y celos.',
+                emptyFeeling: 'Su deseo de pertenecer. Su envidia lo carcome. A pesar de sus talentos, no se siente lo suficientemente bueno para este mundo, lo que lo lleva a crear una identidad anónima para humillar y herir a todos los que lo rechazaron.',
+                image: 'https://placehold.co/192x192/444/FFF?text=Dan',
+                chat: [
+                    { name: 'Dan Humphrey', message: '¿Creen que el cumpleaños de DARQUEEN será una fiesta privada? Suena un poco snob, ¿no?' },
+                    { name: 'Jenny Humphrey', message: 'Tal vez no quieren a los "outsiders" en su mundo. Como siempre.' },
+                    { name: 'Dan Humphrey', message: 'Claro, una fiesta privada para los que sí son "alguien". Como si eso no gritara inseguridad.' },
+                    { name: 'Jenny Humphrey', message: 'O tal vez, hermano, significa que no tienen nada que probar.' },
+                ]
+            },
+            'Nate Archibald': {
+                role: 'El "Chico de Oro"',
+                description: 'El chico más guapo y popular de Manhattan, pero también el más ingenuo. Nate vive a la sombra de su padre y su familia, buscando su propia identidad.',
+                story: 'Nate es el chico que lo tiene todo, pero está constantemente buscando su propósito. Está atrapado entre su padre, su familia, sus amigos y sus amores. Es un personaje que busca su propia identidad en el complicado mundo de la élite.',
+                emptyFeeling: 'Su falta de identidad. Siempre está a la sombra de sus amigos, sus novias y su familia. No es él el que toma las decisiones, sino que las decisiones son tomadas por él. Lucha por encontrar su lugar en el mundo.',
+                image: 'https://placehold.co/192x192/444/FFF?text=Nate',
+                chat: [
+                    { name: 'Nate Archibald', message: 'Serena, ¿sabes si me han invitado al cumpleaños de la nueva chica?' },
+                    { name: 'Serena van der Woodsen', message: 'Nate, no hay invitaciones. Nadie sabe nada. Ni siquiera yo.' },
+                    { name: 'Nate Archibald', message: 'Entonces, ¿qué hacemos? ¿Simplemente nos presentamos? Se rumorea que la fiesta será en un barco o algo así.' },
+                    { name: 'Serena van der Woodsen', message: 'Tal vez... O tal vez nos quedamos en casa y nos perdemos el show más grande del año.' },
+                ]
+            },
+            'DARQUEEN': {
+                role: '¿La nueva Reina?',
+                description: 'DARQUEEN es la nueva chica en el Upper East Side. Rumores de un cumpleaños real y una fiesta de lujo se esparcen por todo Manhattan, pero ¿es la nueva Reina, o solo una más que se unirá a la larga lista de los caídos?',
+                story: 'Ha llegado al Upper East Side con un aura de misterio. Se rumorea que viene de un lugar lejano, de una vida llena de lujos y riquezas. Nadie la conoce, pero todos quieren saber de ella. Se pregunta si su llegada traerá cambios, y si su reinado será breve o duradero.',
+                questions: 'Se rumorea que el cumpleaños de DARQUEEN se acerca. Los chicos del Upper East Side se preguntan: ¿Será una fiesta de lujo? ¿O un evento secreto? ¿Quién será el afortunado que se gane su corazón, o será otra víctima de su fría indiferencia?',
+                emptyFeeling: 'Un enigma. No se sabe si busca amor, fama o poder. Su llegada a Manhattan ha dejado a todos con más preguntas que respuestas. ¿Será la próxima reina? ¿O nunca fue reina? Solo el tiempo lo dirá...',
+                image: 'https://placehold.co/192x192/444/FFF?text=DARQUEEN',
+                chat: [
+                    { name: 'Chica Indiscreta', message: 'Se rumorea que el cumpleaños de DARQUEEN se acerca. La pregunta en boca de todos es: ¿Será una fiesta de lujo? ¿O un evento secreto?' },
+                    { name: 'Blair Waldorf', message: 'Sencillo. Una fiesta secreta no es una fiesta. Los secretos son para los débiles.' },
+                    { name: 'Chica Indiscreta', message: 'Intrigante... Pero los chicos del Upper East Side no se rinden tan fácil. ¿Quién será el afortunado que se gane su corazón?' },
+                    { name: 'Chuck Bass', message: 'El corazón no es un juego, lo sé por experiencia. Pero en este juego, el corazón es la moneda más cara.' },
+                ]
+            }
+        };
+
+        const invitationHtml = `
+            <div class="fade-in bg-black bg-opacity-70 p-8 sm:p-12 rounded-2xl shadow-2xl max-w-2xl w-full border border-yellow-600/40 backdrop-blur-sm mt-8">
+                <h1 class="text-3xl sm:text-4xl text-center mb-6 gossip-girl-text tracking-widest italic gold-glow">
+                    Hola, DARQUEEN
+                </h1>
+                <p class="text-base sm:text-lg mb-4 text-center leading-relaxed">
+                    Se dice que todos están preparándose para el cumpleaños más esperado del año, y sé que la mejor manera de celebrarlo es contigo.  
+                    La cita es en el restaurante: 
+                    <strong class="gossip-girl-text text-xl sm:text-2xl font-bold text-yellow-300">akapella_ca</strong>.
+                </p>
+                <div class="border-t border-b border-gray-500/50 py-4 mb-6">
+                    <div class="flex flex-col sm:flex-row justify-around text-center sm:text-left">
+                        <div class="mb-4 sm:mb-0">
+                            <p class="text-sm sm:text-base font-bold text-gray-400">Fecha:</p>
+                            <p class="text-lg sm:text-xl gossip-girl-text font-semibold">20 de septiembre</p>
+                        </div>
+                        <div>
+                            <p class="text-sm sm:text-base font-bold text-gray-400">Hora:</p>
+                            <p class="text-lg sm:text-xl gossip-girl-text font-semibold">8:00 p.m.</p>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-base sm:text-lg text-center leading-relaxed mb-8">
+                    Ponte tu mejor atuendo, porque esta noche es para celebrarla con la cumplementada más bonita de la historia, <span class="gold-glow">DARQUEEN</span>.
+                </p>
+                <div class="flex justify-between items-end mt-8">
+                    <p class="text-base sm:text-lg gossip-girl-text font-semibold tracking-wider italic">
+                        Atentamente: chico indiscreto
+                    </p>
+                    <p class="text-base sm:text-lg gossip-girl-text font-semibold tracking-wider italic text-right">
+                        XoXo, gossip girl 💋
+                    </p>
+                </div>
+            </div>
+        `;
+
+        const invitationRepostChat = [
+            { name: 'Chica Indiscreta', message: 'OMG, la reina al parecer tiene su REY 🤯' },
+            { name: 'Serena van der Woodsen', message: '¿¡QUE!? ¡No puedo creerlo! 😳' },
+            { name: 'Blair Waldorf', message: 'Sabía que algo grande se estaba cocinando... 👑' },
+            { name: 'Nate Archibald', message: 'Wow, esto es mucho más emocionante que una fiesta en un barco. 😲' },
+            { name: 'Dan Humphrey', message: 'Siempre hay un secreto detrás de cada fachada. Bien jugado. 😉' }
+        ];
+
+        const videoChat = [
+            { name: 'Chica Indiscreta', message: 'Pero eso no es todo, su rey misterioso le hizo un videooo 🤯' },
+            { name: 'Serena van der Woodsen', message: '¡No estoy llorando, tú estás llorando! 😭 Esto es tan lindo.' },
+            { name: 'Blair Waldorf', message: '¿Un video? En serio, ¿hay algo que yo no sepa? 🤔' },
+            { name: 'Chuck Bass', message: 'El chico solitario no es tan solitario después de todo. Bien por él. 🥂' },
+            { name: 'Nate Archibald', message: 'Tengo que admitir, me sorprendió. Es realmente hermoso. 😍' },
+            { name: 'Jenny Humphrey', message: '¡Qué adorable! ¡La mejor sorpresa que he visto!' },
+            { name: 'Dan Humphrey', message: 'Sí, es... inesperado. Definitivamente inesperado. 😏' },
+            { name: 'DARQUEEN', message: '🥰🥺🫶' }
+        ];
+
+        // Función para mostrar los detalles del personaje en el modal
+        function showCharacterDetails(characterName) {
+            const character = characters[characterName];
+            if (!character) {
+                console.error('Personaje no encontrado:', characterName);
+                return;
+            }
+            
+            const modalBody = document.getElementById('modalBody');
+            let content = '';
+
+            const isDarqueen = characterName === 'DARQUEEN';
+            
+            if (character.chat) {
+                let chatContent = character.chat.map(msg => {
+                    const isSelf = msg.name === characterName;
+                    const isGossipGirl = msg.name === 'Chica Indiscreta';
+
+                    const bubbleClass = isSelf || isGossipGirl ? 'bg-amber-800 self-end' : 'bg-gray-700';
+                    const nameColorClass = isSelf || isGossipGirl ? 'text-black' : 'text-amber-300';
+                    const messageSizeClass = 'text-sm';
+                    const messageAlignment = isSelf || isGossipGirl ? 'self-end' : '';
+
+                    return `
+                        <div class="chat-message-bubble max-w-xs p-3 rounded-lg ${bubbleClass} text-gray-200 ${messageAlignment}">
+                            <span class="text-xs ${nameColorClass} font-bold">${msg.name}</span>
+                            <p class="${messageSizeClass} mt-1">${msg.message}</p>
+                        </div>
+                    `;
+                }).join('');
+
+                content = `
+                    <div class="flex flex-col items-center text-center">
+                        <img src="${character.image}" alt="${characterName}" class="w-48 h-48 rounded-full border-4 border-amber-400 shadow-lg object-cover">
+                        <h2 class="text-3xl font-bold text-amber-400 mt-4">${characterName}</h2>
+                        <div class="flex flex-col items-start w-full max-w-sm mx-auto mt-6 space-y-4 p-4 rounded-lg bg-gray-900 shadow-inner">
+                            ${chatContent}
+                        </div>
+                    </div>
+                `;
+            } else {
+                 content = `
+                    <div class="flex flex-col items-center text-center">
+                        <img src="${character.image}" alt="${characterName}" class="w-48 h-48 rounded-full border-4 border-amber-400 shadow-lg object-cover">
+                        <h2 class="text-3xl font-bold text-amber-400 mt-4">${characterName}</h2>
+                        <p class="text-gray-300 mt-2">${character.role}</p>
+                        <p class="text-sm text-gray-400 mt-1">${character.emptyFeeling}</p>
+                        <div class="text-left w-full mt-6">
+                            <p class="text-gray-300 text-md font-bold">Su Vida y sus Chismes:</p>
+                            <p class="text-gray-400 text-md">${character.story}</p>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Si es DARQUEEN, añade el enlace especial para el repost
+            if (isDarqueen) {
+                content += `
+                    <hr class="border-t border-gray-700 my-8 w-full">
+                    <p class="text-gray-400 text-sm mt-4 text-center">
+                        Solo Gossip Girl lo sabe... O tal vez tú...
+                        <a href="#" onclick="showInvitation()" class="text-amber-400 hover:text-amber-200 underline">¡XoXo, chica indiscreta!</a>
+                    </p>
+                `;
+            }
+
+            modalBody.innerHTML = content;
+            document.getElementById('characterModal').classList.add('show');
+        }
+
+        // Función para mostrar el chisme y la invitación
+        function showInvitation() {
+            const modalBody = document.getElementById('modalBody');
+            
+            let repostChatContent = invitationRepostChat.map(msg => {
+                const isGossipGirl = msg.name === 'Chica Indiscreta';
+                const bubbleClass = isGossipGirl ? 'bg-amber-800 self-end' : 'bg-gray-700';
+                const nameColorClass = isGossipGirl ? 'text-black' : 'text-amber-300';
+                const messageSizeClass = 'text-sm';
+                const messageAlignment = isGossipGirl ? 'self-end' : '';
+
+                return `
+                    <div class="chat-message-bubble max-w-xs p-3 rounded-lg ${bubbleClass} text-gray-200 ${messageAlignment}">
+                        <span class="text-xs ${nameColorClass} font-bold">${msg.name}</span>
+                        <p class="${messageSizeClass} mt-1">${msg.message}</p>
+                    </div>
+                `;
+            }).join('');
+
+            const finalContent = `
+                <div class="flex flex-col items-center text-center">
+                    <img src="https://placehold.co/192x192/444/FFF?text=DARQUEEN" alt="DARQUEEN" class="w-48 h-48 rounded-full border-4 border-amber-400 shadow-lg object-cover">
+                    <h2 class="text-3xl font-bold text-amber-400 mt-4">@GossipGirl</h2>
+                    <div class="flex flex-col items-start w-full max-w-sm mx-auto mt-6 space-y-4 p-4 rounded-lg bg-gray-900 shadow-inner">
+                        ${repostChatContent}
+                    </div>
+                </div>
+                ${invitationHtml}
+                <hr class="border-t border-gray-700 my-8 w-full">
+                <p class="text-gray-400 text-sm mt-4 text-center">
+                        ¡Pero eso no es todo, Upper East Side!
+                        <a href="#" onclick="showVideoReveal()" class="text-amber-400 hover:text-amber-200 underline">¡VIDEO!</a>
+                    </p>
+            `;
+            
+            modalBody.innerHTML = finalContent;
+        }
+
+        // Función para mostrar el chisme del video y sus comentarios
+        function showVideoReveal() {
+            const modalBody = document.getElementById('modalBody');
+            
+            let videoChatContent = videoChat.map(msg => {
+                const isGossipGirl = msg.name === 'Chica Indiscreta';
+                const isDarqueen = msg.name === 'DARQUEEN';
+                const bubbleClass = isGossipGirl || isDarqueen ? 'bg-amber-800 self-end' : 'bg-gray-700';
+                const nameColorClass = isGossipGirl || isDarqueen ? 'text-black' : 'text-amber-300';
+                const messageSizeClass = 'text-sm';
+                const messageAlignment = isGossipGirl || isDarqueen ? 'self-end' : '';
+
+                return `
+                    <div class="chat-message-bubble max-w-xs p-3 rounded-lg ${bubbleClass} text-gray-200 ${messageAlignment}">
+                        <span class="text-xs ${nameColorClass} font-bold">${msg.name}</span>
+                        <p class="${messageSizeClass} mt-1">${msg.message}</p>
+                    </div>
+                `;
+            }).join('');
+
+            const videoLinkHtml = `
+                <div class="text-center mt-6">
+                    <p class="text-sm text-gray-400 mb-2">XoXo</p>
+                    <a href= "https://youtube.com/shorts/5brJUoUEjPA" class="text-amber-400 hover:text-amber-200 text-xl underline font-bold transition-transform transform hover:scale-105">
+                        Darqueen?👀
+                    </a>
+                    <p class="text-xs text-gray-500 mt-1 italic">
+                        (Nota: Esto está que arde💋).
+                    </p>
+                </div>
+            `;
+
+            const finalContent = `
+                <div class="flex flex-col items-center text-center">
+                    <img src="https://placehold.co/192x192/444/FFF?text=DARQUEEN" alt="DARQUEEN" class="w-48 h-48 rounded-full border-4 border-amber-400 shadow-lg object-cover">
+                    <h2 class="text-3xl font-bold text-amber-400 mt-4">@GossipGirl</h2>
+                    <div class="flex flex-col items-start w-full max-w-sm mx-auto mt-6 space-y-4 p-4 rounded-lg bg-gray-900 shadow-inner">
+                        ${videoChatContent}
+                    </div>
+                </div>
+                ${videoLinkHtml}
+            `;
+            
+            // Limpia el contenido anterior y muestra la nueva revelación
+            modalBody.innerHTML = finalContent;
+        }
+
+        // Función para ocultar el modal
+        function hideCharacterDetails() {
+            document.getElementById('characterModal').classList.remove('show');
+        }
+    </script>
+</body>
+</html>
